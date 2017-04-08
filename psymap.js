@@ -83,4 +83,58 @@ function plotNodes(left, bottom, right, top) {
 			}
 		}
 	});
+
+	$.ajax({
+		url: apiUrl + 'way[bbox=' + left + ',' + bottom + ',' + right + ',' + top + '][healthcare=psychotherapist]',
+		dataType: 'xml',
+		success: function(response) {
+			var $xml = $(response);
+			var nodes = $xml.find('node');
+			var ways = $xml.find('way');
+
+			for (var i = 0; i < ways.length; i++) {
+				$way = $(ways[i]);
+				tags = $way.find('tag');
+
+				for (var j = 0; j < tags.length; j++) {
+					$tag = $(tags[j]);
+
+					switch ($tag.attr('k')) {
+						case 'name':
+							var name = $tag.attr('v');
+							break;
+						case 'addr:full':
+							var address = $tag.attr('v');
+							break;
+						case 'phone':
+							var phone = $tag.attr('v');
+							break;
+						case 'website':
+							var website = $tag.attr('v');
+							break;
+						case 'email':
+							var email = $tag.attr('v');
+							break;
+					}
+				}
+
+				var ndList = $way.find('nd');
+				var $nd = $(ndList[0]);
+
+				for (var j = 0; j < nodes.length; j++) {
+					var $node = $(nodes[j]);
+
+					if ($node.attr('id') == $nd.attr('ref')) {
+						var lat = $node.attr('lat');
+						var lon = $node.attr('lon');
+						break;
+					}
+				}
+
+				addMark(lat, lon,
+					{name: name, address: address, phone: phone, website: website, email: email}
+				);
+			}
+		}
+	});
 }
