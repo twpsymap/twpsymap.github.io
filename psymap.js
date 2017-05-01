@@ -34,6 +34,12 @@ function addMark(lat, lng, data) {
 			data.phone + '<br>' +
 			'<a href="' + data.website + '" target="_blank">' + data.website + '</a>';
 		marker.bindPopup(popupContent).openPopup();
+
+		marker.on('click', function() {
+			var info = document.getElementById('info');
+			info.innerHTML = popupContent;
+		});
+
 		map.addLayer(marker);
 		markers.push(data.address);
 	}
