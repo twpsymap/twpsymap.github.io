@@ -33,6 +33,11 @@ function addMark(lat, lng, data) {
 			data.address + '<br>' +
 			data.phone + '<br>' +
 			'<a href="' + data.website + '" target="_blank">' + data.website + '</a>';
+
+		if (data.description) {
+			popupContent += '<br>' + data.description;
+		}
+
 		marker.bindPopup(popupContent).openPopup();
 
 		marker.on('click', function() {
@@ -78,13 +83,16 @@ function plotNodes(left, bottom, right, top) {
 						case 'email':
 							var email = $tag.attr('v');
 							break;
+						case 'description':
+							var desc = $tag.attr('v');
+							break;
 					}
 				}
 
 				addMark(
 					$node.attr('lat'),
 					$node.attr('lon'),
-					{name: name, address: address, phone: phone, website: website, email: email}
+					{name: name, address: address, phone: phone, website: website, email: email, description: desc}
 				);
 			}
 		}
